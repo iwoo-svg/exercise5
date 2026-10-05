@@ -1,11 +1,3 @@
-/* Exercise 5 — E in Motion
-   layout: MacBook Air - 1 (2 x 2 grid)
-   hover:  each letter changes step by step (motion frame, left -> right)
-
-   how the steps work:
-   each step changes a different property, and each property gets its own
-   transition-delay (step 1 = 0s, step 2 = --step).
-   on mouse out the delays are flipped, so it plays backwards. */
 
 :root {
   --blue: #0015ff;
@@ -31,10 +23,10 @@ body {
   width: 1280px;
   height: 1173px;
   margin: 0 auto;
-  overflow: hidden;    /* long bars run off the edge */
+  overflow: hidden;    
 }
 
-/* each quarter of the page is a hover area */
+
 .cell {
   position: absolute;
   width: 640px;
@@ -46,7 +38,7 @@ body {
 .cell-squares { left: 0px;   top: 586px; height: 587px; }
 .cell-bars    { left: 640px; top: 586px; height: 587px; }
 
-/* letters are drawn at the motion frame size, then scaled up to the layout */
+
 .letter {
   position: absolute;
   transform-origin: top left;
@@ -58,11 +50,7 @@ body {
 .bars    { left: 72px;  top: 95px;  transform: scale(1.878); }
 
 
-/* ---------------------------------------------
-   1. OVALS
-   step 1: circles stretch into ovals (scaleX)
-   step 2: ovals tilt (rotate)
---------------------------------------------- */
+*/
 .oval {
   position: absolute;
   left: -58.3px;
@@ -104,11 +92,7 @@ body {
 }
 
 
-/* ---------------------------------------------
-   2. STRIPES
-   one step: stripes spread out wide (left, top)
-   each column starts a little later
---------------------------------------------- */
+
 .stripe-row {
   position: absolute;
   left: 0px;
@@ -151,13 +135,8 @@ body {
 .cell-stripes:hover .stripe:nth-child(8) { left: 179.5px;  top: -7px; }
 
 
-/* ---------------------------------------------
-   3. SQUARES
-   step 1: squares grow into a bar E (height, width)
-   step 2: the bar E breaks into 11 blocks
-           (bar E fades out, blocks fade in on top of it,
-            then the blocks shrink and slide apart)
---------------------------------------------- */
+
+
 .spine,
 .arm {
   position: absolute;
@@ -193,7 +172,8 @@ body {
               opacity 0.3s linear var(--step);
 }
 
-/* blocks start as tiles that fill the bar E exactly */
+
+
 .blocks {
   position: absolute;
   left: 0px;
@@ -211,13 +191,11 @@ body {
               opacity 0.3s linear var(--speed);
 }
 
-/* spine tiles */
 .block:nth-child(1)  { left: 0px;    top: 0px;     width: 27px;   height: 32.6px; }
 .block:nth-child(2)  { left: 0px;    top: 32.6px;  width: 27px;   height: 32.6px; }
 .block:nth-child(3)  { left: 0px;    top: 65.2px;  width: 27px;   height: 32.6px; }
 .block:nth-child(4)  { left: 0px;    top: 97.8px;  width: 27px;   height: 32.6px; }
 .block:nth-child(5)  { left: 0px;    top: 130.4px; width: 27px;   height: 32.6px; }
-/* arm tiles */
 .block:nth-child(6)  { left: 27px;   top: 0px;     width: 36.5px; height: 27px; }
 .block:nth-child(7)  { left: 63.5px; top: 0px;     width: 36.5px; height: 27px; }
 .block:nth-child(8)  { left: 27px;   top: 67px;    width: 36.5px; height: 28px; }
@@ -249,11 +227,8 @@ body {
 .cell-squares:hover .block:nth-child(11) { left: 68px; top: 131px; }
 
 
-/* ---------------------------------------------
-   4. BARS
-   one step: middle bar gets short,
-   top + bottom slide right and stretch out
---------------------------------------------- */
+
+
 .bar {
   position: absolute;
   left: 0px;
