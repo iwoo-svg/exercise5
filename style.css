@@ -1,0 +1,279 @@
+/* Exercise 5 — E in Motion
+   layout: MacBook Air - 1 (2 x 2 grid)
+   hover:  each letter changes step by step (motion frame, left -> right)
+
+   how the steps work:
+   each step changes a different property, and each property gets its own
+   transition-delay (step 1 = 0s, step 2 = --step).
+   on mouse out the delays are flipped, so it plays backwards. */
+
+:root {
+  --blue: #0015ff;
+  --gray-light: #d9d9d9;
+  --gray-dark: #737373;
+  --speed: 0.8s;
+  --step: 1s;          /* time between steps */
+  --ease: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: black;
+}
+
+.canvas {
+  position: relative;
+  width: 1280px;
+  height: 1173px;
+  margin: 0 auto;
+  overflow: hidden;    /* long bars run off the edge */
+}
+
+/* each quarter of the page is a hover area */
+.cell {
+  position: absolute;
+  width: 640px;
+  cursor: pointer;
+}
+
+.cell-ovals   { left: 0px;   top: 0px;   height: 586px; }
+.cell-stripes { left: 640px; top: 0px;   height: 586px; }
+.cell-squares { left: 0px;   top: 586px; height: 587px; }
+.cell-bars    { left: 640px; top: 586px; height: 587px; }
+
+/* letters are drawn at the motion frame size, then scaled up to the layout */
+.letter {
+  position: absolute;
+  transform-origin: top left;
+}
+
+.ovals   { left: 343px; top: 217px; transform: scale(1.75); }
+.stripes { left: 170px; top: 181px; transform: scale(1.51); }
+.squares { left: 356px; top: 95px;  transform: scale(1.51); }
+.bars    { left: 72px;  top: 95px;  transform: scale(1.878); }
+
+
+/* ---------------------------------------------
+   1. OVALS
+   step 1: circles stretch into ovals (scaleX)
+   step 2: ovals tilt (rotate)
+--------------------------------------------- */
+.oval {
+  position: absolute;
+  left: -58.3px;
+  width: 154.6px;
+  height: 38.3px;
+  transition: transform var(--speed) var(--ease) 0s;
+}
+
+.oval:nth-child(1) { top: 0px; }
+.oval:nth-child(2) { top: 51.1px; }
+.oval:nth-child(3) { top: 102.4px; }
+
+.oval-shape {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(to right, var(--gray-light), var(--blue));
+  transform: scaleX(0.2457);
+  transition: transform var(--speed) var(--ease) var(--step);
+}
+
+.cell-ovals:hover .oval-shape {
+  transform: scaleX(1);
+  transition-delay: 0s;
+}
+
+.cell-ovals:hover .oval {
+  transition-delay: var(--step);
+}
+
+.cell-ovals:hover .oval:nth-child(1) {
+  transform: translate(0px, 15.3px) rotate(-29.54deg);
+}
+.cell-ovals:hover .oval:nth-child(2) {
+  transform: rotate(-29.54deg);
+}
+.cell-ovals:hover .oval:nth-child(3) {
+  transform: translate(-5px, -13.3px) rotate(-29.54deg);
+}
+
+
+/* ---------------------------------------------
+   2. STRIPES
+   one step: stripes spread out wide (left, top)
+   each column starts a little later
+--------------------------------------------- */
+.stripe-row {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  transition: top var(--speed) var(--ease);
+}
+
+.stripe-row:nth-child(2) { top: 55px; }
+.stripe-row:nth-child(3) { top: 110px; }
+
+.stripe {
+  position: absolute;
+  width: 6px;
+  height: 37px;
+  border-radius: 26px;
+  background: linear-gradient(to bottom, black, var(--gray-light));
+  transition: left var(--speed) var(--ease),
+              top var(--speed) var(--ease);
+}
+
+.stripe:nth-child(1) { left: 0px;  top: 64px; }
+.stripe:nth-child(2) { left: 8px;  top: 55px; transition-delay: 0.04s; }
+.stripe:nth-child(3) { left: 17px; top: 46px; transition-delay: 0.08s; }
+.stripe:nth-child(4) { left: 25px; top: 37px; transition-delay: 0.12s; }
+.stripe:nth-child(5) { left: 33px; top: 27px; transition-delay: 0.16s; }
+.stripe:nth-child(6) { left: 41px; top: 18px; transition-delay: 0.2s; }
+.stripe:nth-child(7) { left: 50px; top: 9px;  transition-delay: 0.24s; }
+.stripe:nth-child(8) { left: 58px; top: 0px;  transition-delay: 0.28s; }
+
+.cell-stripes:hover .stripe-row:nth-child(2) { top: 64px; }
+.cell-stripes:hover .stripe-row:nth-child(3) { top: 124px; }
+
+.cell-stripes:hover .stripe:nth-child(1) { left: -121.5px; top: 30px; }
+.cell-stripes:hover .stripe:nth-child(2) { left: -78.5px;  top: 30px; }
+.cell-stripes:hover .stripe:nth-child(3) { left: -35.5px;  top: 25px; }
+.cell-stripes:hover .stripe:nth-child(4) { left: 7.5px;    top: 16px; }
+.cell-stripes:hover .stripe:nth-child(5) { left: 50.5px;   top: 6px; }
+.cell-stripes:hover .stripe:nth-child(6) { left: 93.5px;   top: -3px; }
+.cell-stripes:hover .stripe:nth-child(7) { left: 136.5px;  top: -7px; }
+.cell-stripes:hover .stripe:nth-child(8) { left: 179.5px;  top: -7px; }
+
+
+/* ---------------------------------------------
+   3. SQUARES
+   step 1: squares grow into a bar E (height, width)
+   step 2: the bar E breaks into 11 blocks
+           (bar E fades out, blocks fade in on top of it,
+            then the blocks shrink and slide apart)
+--------------------------------------------- */
+.spine,
+.arm {
+  position: absolute;
+  left: 0px;
+  width: 27px;
+  height: 27px;
+  transition: width var(--speed) var(--ease) calc(var(--speed) + 0.3s),
+              height var(--speed) var(--ease) calc(var(--speed) + 0.3s),
+              opacity 0.3s linear var(--speed);
+}
+
+.spine {
+  top: 0px;
+  background: linear-gradient(to top, var(--gray-light), var(--gray-dark));
+}
+
+.arm {
+  background: linear-gradient(to right, var(--gray-light), var(--gray-dark));
+}
+
+.arm:nth-child(1) { top: 0px; }
+.arm:nth-child(3) { top: 67px; height: 28px; }
+.arm:nth-child(4) { top: 136px; }
+
+.cell-squares:hover .spine { height: 163px; }
+.cell-squares:hover .arm   { width: 100px; }
+
+.cell-squares:hover .spine,
+.cell-squares:hover .arm {
+  opacity: 0;
+  transition: width var(--speed) var(--ease) 0s,
+              height var(--speed) var(--ease) 0s,
+              opacity 0.3s linear var(--step);
+}
+
+/* blocks start as tiles that fill the bar E exactly */
+.blocks {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.block {
+  position: absolute;
+  background: linear-gradient(to right, var(--gray-light), var(--gray-dark));
+  opacity: 0;
+  transition: left var(--speed) var(--ease) 0s,
+              top var(--speed) var(--ease) 0s,
+              width var(--speed) var(--ease) 0s,
+              height var(--speed) var(--ease) 0s,
+              opacity 0.3s linear var(--speed);
+}
+
+/* spine tiles */
+.block:nth-child(1)  { left: 0px;    top: 0px;     width: 27px;   height: 32.6px; }
+.block:nth-child(2)  { left: 0px;    top: 32.6px;  width: 27px;   height: 32.6px; }
+.block:nth-child(3)  { left: 0px;    top: 65.2px;  width: 27px;   height: 32.6px; }
+.block:nth-child(4)  { left: 0px;    top: 97.8px;  width: 27px;   height: 32.6px; }
+.block:nth-child(5)  { left: 0px;    top: 130.4px; width: 27px;   height: 32.6px; }
+/* arm tiles */
+.block:nth-child(6)  { left: 27px;   top: 0px;     width: 36.5px; height: 27px; }
+.block:nth-child(7)  { left: 63.5px; top: 0px;     width: 36.5px; height: 27px; }
+.block:nth-child(8)  { left: 27px;   top: 67px;    width: 36.5px; height: 28px; }
+.block:nth-child(9)  { left: 63.5px; top: 67px;    width: 36.5px; height: 28px; }
+.block:nth-child(10) { left: 27px;   top: 136px;   width: 36.5px; height: 27px; }
+.block:nth-child(11) { left: 63.5px; top: 136px;   width: 36.5px; height: 27px; }
+
+.cell-squares:hover .block {
+  width: 27px;
+  height: 27px;
+  opacity: 1;
+  transition: left var(--speed) var(--ease) calc(var(--step) + 0.3s),
+              top var(--speed) var(--ease) calc(var(--step) + 0.3s),
+              width var(--speed) var(--ease) calc(var(--step) + 0.3s),
+              height var(--speed) var(--ease) calc(var(--step) + 0.3s),
+              opacity 0.3s linear var(--step);
+}
+
+.cell-squares:hover .block:nth-child(1)  { left: 0px;  top: -5px; }
+.cell-squares:hover .block:nth-child(2)  { left: 0px;  top: 29px; }
+.cell-squares:hover .block:nth-child(3)  { left: 0px;  top: 63px; }
+.cell-squares:hover .block:nth-child(4)  { left: 0px;  top: 97px; }
+.cell-squares:hover .block:nth-child(5)  { left: 0px;  top: 131px; }
+.cell-squares:hover .block:nth-child(6)  { left: 34px; top: -5px; }
+.cell-squares:hover .block:nth-child(7)  { left: 68px; top: -5px; }
+.cell-squares:hover .block:nth-child(8)  { left: 34px; top: 63px; }
+.cell-squares:hover .block:nth-child(9)  { left: 68px; top: 63px; }
+.cell-squares:hover .block:nth-child(10) { left: 34px; top: 131px; }
+.cell-squares:hover .block:nth-child(11) { left: 68px; top: 131px; }
+
+
+/* ---------------------------------------------
+   4. BARS
+   one step: middle bar gets short,
+   top + bottom slide right and stretch out
+--------------------------------------------- */
+.bar {
+  position: absolute;
+  left: 0px;
+  width: 120px;
+  height: 39px;
+  background: linear-gradient(to right, black, var(--blue));
+  transition: left var(--speed) var(--ease),
+              width var(--speed) var(--ease);
+}
+
+.bar:nth-child(1) { top: 0px; }
+.bar:nth-child(2) { top: 46px; }
+.bar:nth-child(3) { top: 92px; }
+
+.cell-bars:hover .bar:nth-child(1),
+.cell-bars:hover .bar:nth-child(3) {
+  left: 19px;
+  width: 479px;
+}
+
+.cell-bars:hover .bar:nth-child(2) {
+  width: 81px;
+}
