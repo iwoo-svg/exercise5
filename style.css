@@ -3,6 +3,7 @@
   --blue: #0015ff;
   --gray-light: #d9d9d9;
   --gray-dark: #737373;
+  --black: #000000;
   --speed: 0.8s;
   --step: 1s;          /* time between steps */
   --ease: cubic-bezier(0.65, 0, 0.35, 1);
@@ -108,7 +109,7 @@ body {
   width: 6px;
   height: 37px;
   border-radius: 26px;
-  background: linear-gradient(to bottom, black, var(--gray-light));
+  background: linear-gradient(to top, white, var(--blue));
   transition: left var(--speed) var(--ease),
               top var(--speed) var(--ease);
 }
@@ -150,11 +151,11 @@ body {
 
 .spine {
   top: 0px;
-  background: linear-gradient(to top, var(--gray-light), var(--gray-dark));
+  background: linear-gradient(to top, var(--black), var(--blue));
 }
 
 .arm {
-  background: linear-gradient(to right, var(--gray-light), var(--gray-dark));
+  background: linear-gradient(to right, var(--black), var(--blue));
 }
 
 .arm:nth-child(1) { top: 0px; }
@@ -182,7 +183,7 @@ body {
 
 .block {
   position: absolute;
-  background: linear-gradient(to right, var(--gray-light), var(--gray-dark));
+  background: linear-gradient(to left, var(--blue), var(--black));
   opacity: 0;
   transition: left var(--speed) var(--ease) 0s,
               top var(--speed) var(--ease) 0s,
